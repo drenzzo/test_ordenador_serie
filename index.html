@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div id="wrapper" class="">
+      <div class="container">
+
+        <div class="ordenados"></div>
+        <div class="desordenados"></div>
+        <form id="formulario" role="form">
+          <input type="text" id="numero" name="numero" value="" /><br />
+          <button id="ingresar">Ingresar número</button><br />
+          <button type="button" id="ordenar" name="ordenar">Ordenar</button>
+        </form>
+      </div>
+
+    </div>
+    <script type="text/javascript">
+
+    $(document).ready(function(){
+
+      //mensajes persoanlizados para jquery validate
+      jQuery.extend(jQuery.validator.messages, {
+        required: "Este campo es obligatorio",
+        digits: "Por favor, escriba solo números"
+      });
+
+      //array donde se guardan elementos ingresados
+      var a = [];
+
+      $('#ingresar').click(function(){
+
+        //solo digitos en el campo '#numero'
+          $('#formulario').validate({
+            rules:{
+              numero:{
+                required: true,
+                digits: true
+              }
+            },
+            submitHandler: function(){
+              //numero ingresado
+              var num = $('#numero').val();
+
+              //si en el array ya existe el numero ingresado
+              if($.inArray(num, a) != -1){
+                alert('El numero ya existe');
+              }else{ //sino se ingresa normal
+
+                //se inserta el elemento en div
+                $('.desordenados').append("<span>" + num + "</span>");
+
+                //se inserta elemento en array
+                a.push(num);
+              }
+
+              //el input se retorna a vacio
+              $('#numero').val('');
+            }
+          });
+      });
+
+      //ordenar elementos ingresado
+      $('#ordenar').click(function(){
+
+          //usando un hack de sort podemos ordenar de forma numerica
+          a.sort(ordenAsc);
+          for (var i = 0; i < a.length; i ++){
+            $('.ordenados').append("<span>" + a[i] + "</span>");
+          }
+
+          //funcion hack para ordenar ascendetemente
+          function ordenAsc(elem1, elem2){
+            return elem1 - elem2;
+          }
+      });
+
+  });
+    </script>
+  </body>
+</html>
